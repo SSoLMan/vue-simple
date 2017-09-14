@@ -1,22 +1,19 @@
-"# vue-simple" 
-# shop-admin
+# vue-simple
 
-> to shop admin
+> 简易vue.js的实现，主要帮大家了解vue 实现的原理，如何更好的去使用vue
 
-## Build Setup
+## 1.0功能介绍
 
 ``` bash
-# install dependencies
-npm install
+# 生命周期函数
+通过生命周期函数可以 了解 vue组件运行的整个周期
 
-# serve with hot reload at localhost:8080
-npm run dev
+# 数据响应的简单实现
+如何通过数据对视图的控制
 
-# build for production with minification
-npm run build
+# 将要实现的
+准确的依赖收集，watch,computed，
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
+# 不打算实现的
+jsx的解析（一般交给编译器做的事）    虚拟dom diff 算法（算法的问题不做深究），
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
