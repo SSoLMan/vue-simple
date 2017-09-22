@@ -20,8 +20,8 @@
     // 创建dom元素的方法
     createElement(tagName,option,cont){ 
         var domEl = document.createElement(tagName)
-        option.props&&Object.keys(option.props).forEach(ele=>{
-           domEl[ele] = option.props[ele]
+        option.on&&Object.keys(option.on).forEach(ele=>{
+           domEl["on"+ele] = option.on[ele]
         });
         var child = null
         if(Object.prototype.toString.call(cont)==="[object Array]"){

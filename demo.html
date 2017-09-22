@@ -27,8 +27,8 @@ var app = new V({
         return  h("div",{},[
             h("p",{},this.a),
             h("button",{
-                props:{
-                    onclick:this.change.bind(this)
+                on:{
+                    click:this.change.bind(this)
                 }
             },"按钮")
         ])
