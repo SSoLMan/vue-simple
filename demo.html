@@ -15,21 +15,23 @@
 var app = new V({
     el:"#app",
     data:{
-        a:1,
+        a:[1,2,{a:1}],
         b:2
     },
     methods:{
         change(){
-            this.a +=10
+            this.a[2].a +=10
         }
     },
     render(h){
         return  h("div",{},[
-            h("p",{},this.a),
+            h("p",{},this.a[2].a),
             h("button",{
-                props:{
-                    onclick:this.change.bind(this)
+              
+                on: {
+                    click: this.change.bind(this)
                 }
+               
             },"按钮")
         ])
     },

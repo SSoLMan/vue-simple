@@ -20,8 +20,9 @@
     // 创建dom元素的方法
     createElement(tagName,option,cont){ 
         var domEl = document.createElement(tagName)
-        option.props&&Object.keys(option.props).forEach(ele=>{
-           domEl[ele] = option.props[ele]
+        option.on&&Object.keys(option.on).forEach(ele=>{
+            console.log("on"+ele)
+           domEl["on"+ele] = option.on[ele]
         });
         var child = null
         if(Object.prototype.toString.call(cont)==="[object Array]"){
@@ -59,7 +60,6 @@
         Object.keys(option.data).forEach(ele=>{
             //拷贝 option的data到  组件实例（vue实现的方法更复杂）
             defineReactive(this,ele,option.data[ele],this.update.bind(this))//(obj,key,val,cb)
-            
         });
         // 拷贝 option的 方法到 组件实例
         Object.keys(option.methods).forEach(ele=>{
@@ -94,6 +94,12 @@
 }
 //响应数据设置的方法
 const defineReactive=(obj,key,val,cb)=>{
+    //递归，属性如果是对象 也 添加数据监听
+    if(typeof val==="object"&&val!=null){
+        Object.keys(val).map(ele=>{
+        defineReactive(val,ele,val[ele],cb)     
+        })
+    }
     Object.defineProperty(obj,key,{
         get:function(){
             console.log(val)
@@ -109,6 +115,7 @@ const defineReactive=(obj,key,val,cb)=>{
             cb() //当数据变动时调用回调 跟新组件（cd其实就是组件的update方法）
         }
     })
+
 }
 
 
