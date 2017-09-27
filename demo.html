@@ -16,24 +16,44 @@ var app = new V({
     el:"#app",
     data:{
         a:[1,2,{a:1}],
-        b:2
+        b:2,
+        c:20,
+        oList:{a:[{n:2}],b:3}
     },
     methods:{
         change(){
             this.a[2].a +=10
+        },
+        changeC(){
+            this.c +=10
         }
     },
     render(h){
         return  h("div",{},[
-            h("p",{},this.a[2].a),
+            h("p",{},this.a),
+            h("p",{},this.mm),
             h("button",{
-              
                 on: {
                     click: this.change.bind(this)
                 }
-               
-            },"按钮")
+            },"按钮"),
+            h("button",{
+                on: {
+                    click: this.changeC.bind(this)
+                }
+            },"c按钮")
         ])
+    },
+    computed:{
+        mm(){
+            var result = this.c+this.a[2].a
+            return result
+        }
+    },
+    watch:{
+        oList(){
+            console.log("oList change")
+        }
     },
     mounted(){
         console.log("mounted")
