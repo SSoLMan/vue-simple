@@ -2,17 +2,20 @@
 
 > 简易vue.js的实现,但主要帮大家了解vue核心部分的实现的原理，如何更好的去使用vue
 
-## 1.0功能介绍
+## 1.1功能介绍
 
 ``` bash
-# 生命周期函数
-通过生命周期函数可以 了解 vue组件运行的整个周期
+# 准确的依赖收集
+在第一次render的时候通过 get 收集依赖，set的时候回调
 
-# 数据响应的简单实现
-如何通过数据对视图的控制
+# 简单的watch金额computed
+initData的时候 收集watch和computed的依赖
+
+# proxy data on instance 
+把option.data的数据保存在_data里面，然后通过实例代理读写
 
 # 将要实现的
-准确的依赖收集，watch,computed，
+异步队列（否则会多次渲染）
 
 
 
