@@ -70,7 +70,6 @@
             this[ele] = option.methods[ele]
         })
 
-
         //计算属性
         let computedWatcher = this.option.computed||{}
         Object.keys(computedWatcher).map(key=>{
@@ -136,6 +135,7 @@ class Watcher{
         }
     }
     //。。。。
+    //需要异步队列
 }
 
 class Dep{
