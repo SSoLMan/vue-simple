@@ -10,6 +10,7 @@
     'destroyed'
   ]
  
+ let componentId = 1
  class V {
     constructor(option={}){
         this.option = option //配置项
@@ -73,7 +74,7 @@
         //计算属性
         let computedWatcher = this.option.computed||{}
         Object.keys(computedWatcher).map(key=>{
-           Dep.target = ()=>{this[key]=computedWatcher[key].call(this)}
+           Dep.target = ()=>{this[key]=computedWatcher[key].call(this);}
            defineReactive(this,key,computedWatcher[key].call(this))
            Dep.target = null
         })
@@ -81,10 +82,11 @@
           //watch  深监听
         let watchs = this.option.watch||{}
         Object.keys(watchs).map(key=>{
-            new Watcher(this,key,watchs,true)//默认深度监听
+            new Watch(this,key,watchs,true)//默认深度监听
         })
     }
     create(){//create
+        this.id = componentId++;
         this.initLifecycle() //&event &initRender
         this.beforeCreate() //callHook 
         this.initData() //initInjections & INITState &initProvide
@@ -93,7 +95,7 @@
     mount(){//第一次render 
         this.el =document.getElementById(this.option.el.substr(1)) //没有判断el绑定的是class或id
         this.beforeMount()
-        Dep.target = this.update.bind(this)
+        Dep.target = new Watcher(this,this.update)
         this.render()
         Dep.target = null
     }
@@ -113,8 +115,52 @@
  
 }
 
-//监听       watcher 是核心部分 >_<
-class Watcher{
+let pending = false //队列执行的等待状态
+let queue = []//异步队列
+// 改写了Watcher 用来实现异步队列
+class Watcher {
+    constructor(vm,update){
+        this.vm = vm
+        this.update = update.bind(vm)
+    }
+    run(){
+        //队列添加未添加过的watcher
+        let has = false;
+        queue.forEach(ele=>{
+            if(ele.vm.id==this.vm.id){ //通过识别组件id避免重复添加同一个update到异步队列
+                has =true
+            }
+        })
+        if(!has){
+            queue.push(this)
+        }
+        
+        //通过异步去执行队列
+        if(!pending){ 
+            //如果异步队列不处于等待状态（空闲状态）就异步执行 队列回调
+            pending = true
+            if(typeof Promise !== 'undefined'){
+                let p = Promise.resolve();
+                p.then(()=>{
+                    queue.forEach(ele=>{
+                        ele.update()
+                    })
+                    pending = false
+                })
+            }else{
+                setTimeout(()=>{
+                    queue.forEach(ele=>{
+                        ele.update()
+                    })
+                    pending = false
+                },0)
+            }
+        }
+    }
+}
+
+//监听     watch
+class Watch{
     constructor(vm,key,watchs,deep){
         console.log(key,watchs[key])
         Dep.target = watchs[key].bind(vm)
@@ -134,10 +180,8 @@ class Watcher{
             })
         }
     }
-    //。。。。
-    //需要异步队列
 }
-
+//依赖收集
 class Dep{
     constructor(){
         this.watchList = []
@@ -147,11 +191,16 @@ class Dep{
     }
     notify(){
         this.watchList.forEach(e=>{
-            e()
+           
+            if(typeof e =="function"){
+                e()
+            }else{
+                e.run()
+            }
         })
     }
-}
-
+}   
+//代理
 const proxy = (obj,sourceKey,key)=>{
     Object.defineProperty(obj,key,{
         configurable:true,
@@ -188,7 +237,7 @@ const defineReactive=(obj,key,val)=>{
             }
             val = newVal;
             dep.notify()
-           // cb() //当数据变动时调用回调 跟新组件（cd其实就是组件的update方法）
+           
         }
     })
 

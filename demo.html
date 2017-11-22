@@ -15,14 +15,15 @@
 var app = new V({
     el:"#app",
     data:{
-        a:[1,2,{a:1}],
-        b:2,
-        c:20,
-        oList:{a:[{n:2}],b:3}
+        a:123,
+        b:123,
+        c:123
     },
     methods:{
         change(){
-            this.a[2].a +=10
+            this.a++;
+            console.log("............")
+            this.b++
         },
         changeC(){
             this.c +=10
@@ -31,6 +32,7 @@ var app = new V({
     render(h){
         return  h("div",{},[
             h("p",{},this.a),
+            h("p",{},this.b),
             h("p",{},this.mm),
             h("button",{
                 on: {
@@ -46,13 +48,13 @@ var app = new V({
     },
     computed:{
         mm(){
-            var result = this.c+this.a[2].a
+            var result = this.c+this.a
             return result
         }
     },
     watch:{
-        oList(){
-            console.log("oList change")
+        c(){
+            console.log("c change")
         }
     },
     mounted(){
