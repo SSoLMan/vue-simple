@@ -5,12 +5,13 @@
 ## 1.2功能介绍
 
 ``` bash
+# 基本生命周期，准确的依赖收集
+# watch，computed
 # 异步队列
-通过识别组件id避免重复添加同一个update到异步队列， 通过promise/timeout异步执行队列回调
+
+  
 
 
-# 将要实现的
-尝试使用 vue的jsx语法编译
 
 
 
